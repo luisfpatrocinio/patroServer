@@ -21,7 +21,8 @@
 
     <script>
         // Criar Conexão WebSocket
-        var socket = new WebSocket('ws://localhost:8765');
+        // var socket = new WebSocket('ws://localhost:8765');
+        var socket = new WebSocket('ws://patroserver.onrender.com');
     
         var failed = false;
         var pointsCounter = 0;
@@ -31,7 +32,7 @@
             if (pointsCounter == 3) {
                 pointsCounter = 0;
                 // Tentar reconectar
-                socket = new WebSocket('ws://localhost:8765');
+                socket = new WebSocket('ws://patroserver.onrender.com');
             } else {
                 pointsCounter++;
             }
