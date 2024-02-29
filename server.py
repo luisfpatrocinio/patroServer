@@ -1,35 +1,19 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
+import asyncio
+import websockets
 
-# Classe para lidar com requisições HTTP:
-class RequestHandler(BaseHTTPRequestHandler):
-    # Método para lidar com requisições GET:
-    def do_GET(self):
-        # Configurar cabeçalho da resposta:
-        self.send_response(200)
-        self.send_header('Content-type', 'text/html')
-        self.end_headers()
+# Servidor Echo
+async def server(websocket, path):
+    # Loop para receber mensagens do cliente:
+    async for message in websocket:
+        # Processar a mensagem recebida do cliente:
+        print(f"Recebi a mensagem: {message}")
 
-        # Enviar o corpo da resposta:
-        self.wfile.write(b'Olar.')
-
+        # Reenviar a mensagem para o jogo.
+        await websocket.send(message)
 
 # Iniciar o servidor:
-def run(port=8000):
-    # Cria uma instância do servidor HTTP:
-    print('Iniciando servidor...')
-    server_address = ('', port)
-    httpd = HTTPServer(server_address, RequestHandler)
-    print(f'Servidor iniciado na porta {port}.')
+start_server = websockets.serve(server, "localhost", 8765)
 
-    try:
-        # Mantém o servidor em execução:
-        httpd.serve_forever()
-    except KeyboardInterrupt:
-        # Encerra o servidor caso o usuário pressione Ctrl+C:
-        httpd.server_close()
-        print('Servidor encerrado.')
-
-
-# Inicia o servidor na porta 8000:
-if __name__ == '__main__':
-    run()
+# Executa o servidor indefinidamente
+asyncio.get_event_loop().run_until_complete(start_server)
+asyncio.get_event_loop().run_forever()
