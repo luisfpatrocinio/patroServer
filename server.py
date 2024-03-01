@@ -17,7 +17,7 @@ async def server(websocket, path):
         
         # Mandando a mensagem para todos os clientes
         for conected in connectedClients:
-            print("Mandando pacote para: " + str(conected.remote_adress))
+            print("Mandando pacote para: " + str(conected.remote_address))
             await conected.send(message);
                         
 
