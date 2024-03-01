@@ -1,7 +1,7 @@
 
 // Criar Conexão WebSocket
-const websocketUrl = "ws://localhost:4999";
-// const websocketUrl = 'wss://patroserver.onrender.com/:4999';
+// const websocketUrl = "ws://localhost:4999";
+const websocketUrl = 'wss://patroserver.onrender.com/:8765';
 const socket = new WebSocket(websocketUrl);
 
 var failed = false;
