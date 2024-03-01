@@ -17,6 +17,7 @@ body {
 
 #chatSection {
     width: 80%;
+    max-width: 450px;
     display: flex;
     flex-direction: column;
     padding: 20px;
@@ -24,6 +25,8 @@ body {
     border-radius: 25px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-bottom: 50px;
+    overflow-y: scroll;
+   
 }
 
 .chatMessage {
@@ -66,4 +69,29 @@ button:hover {
     input[type="text"] {
         width: 100%;
     }
+}
+
+
+/* PROPRIEDADES DA BARRA DE SCROLL */
+
+
+/* width */
+::-webkit-scrollbar {
+    width: 12px;
+}
+  
+  /* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f100;
+}
+  
+/* Handle */
+::-webkit-scrollbar-thumb {
+    border-radius: 50px;
+    
+}
+
+::-webkit-scrollbar-thumb{
+    width: 20px;
+    background: #ffffff;
 }
