@@ -76,12 +76,18 @@ socket.addEventListener('message', function (event) {
     if (_type == "PLAYER_MESSAGE") {
         var _name = _playerInfo.values.name;
         var _message = _playerInfo.values.message;
+        createMessageBlock(_name, _message);
 
     }
 });
 
-function createMessageBlock() {
-    
+function createMessageBlock(name, message) {
+    console.log("Criando bloco de mensagem")
+    const chatSection = document.getElementById("chatSection");
+    const newMessage = document.createElement("div");
+    newMessage.className = "chatMessage";
+    newMessage.innerHTML = `${name} : ${message}`;
+    chatSection.appendChild(newMessage);
 }
 
 // Enviar Mensagem
@@ -105,7 +111,7 @@ function sendMessage() {
     var _playerInfo = {};
 
     // Obter texto inserido pelo usuário:
-    _playerInfo.command = "PLAYER_LOGIN";
+    _playerInfo.command = "PLAYER_MESSAGE";
     _playerInfo.values = {};
     _playerInfo.values.name = String(document.getElementById("playerName").value).toUpperCase();
     _playerInfo.values.message = String(document.getElementById("playerMessage").value).toUpperCase();
