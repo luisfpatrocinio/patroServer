@@ -130,7 +130,7 @@ function sendMessage() {
         socket.send(jsonData);
         
         // Limpar campo:
-        document.getElementById("playerName").value = "";
+        document.getElementById("playerMessage").value = "";
 
         // DESATIVADO: Mudar de página para player_panel.html:
         // window.location.href = "player_panel.html?name=" + encodeURIComponent(playerName);
