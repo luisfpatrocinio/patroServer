@@ -15,6 +15,25 @@ body {
     align-items: center;
 }
 
+#chatSection {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: #0F3057;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.chatMessage {
+    border: 2px solid #1E4D92;
+    padding: 10px;
+    border-radius: 25px;
+    background-color: #1E4D92;
+}
+
 h1 {
     margin-bottom: 20px;
 }

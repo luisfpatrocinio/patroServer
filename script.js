@@ -1,6 +1,7 @@
+
 // Criar Conexão WebSocket
-// var socket = new WebSocket('ws://localhost:8765');
-const websocketUrl = 'wss://patroserver.onrender.com/:4999';
+const websocketUrl = "ws://localhost:4999";
+// const websocketUrl = 'wss://patroserver.onrender.com/:4999';
 const socket = new WebSocket(websocketUrl);
 
 var failed = false;
@@ -71,7 +72,17 @@ socket.addEventListener('message', function (event) {
             playerConnected.style.display = "block";
         }
     }
+
+    if (_type == "PLAYER_MESSAGE") {
+        var _name = _playerInfo.values.name;
+        var _message = _playerInfo.values.message;
+
+    }
 });
+
+function createMessageBlock() {
+    
+}
 
 // Enviar Mensagem
 function sendMessage() {
@@ -97,6 +108,7 @@ function sendMessage() {
     _playerInfo.command = "PLAYER_LOGIN";
     _playerInfo.values = {};
     _playerInfo.values.name = String(document.getElementById("playerName").value).toUpperCase();
+    _playerInfo.values.message = String(document.getElementById("playerMessage").value).toUpperCase();
 
     var jsonData = JSON.stringify(_playerInfo); 
 

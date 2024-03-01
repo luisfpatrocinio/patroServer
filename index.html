@@ -7,11 +7,17 @@
     <title>PatroServer Connect</title>
 </head>
 <body>
-    <h1>PatroServer</h1>
+    <h1>PatroChat</h1>
     <div id="loadingMsg" p class="welcome"> CONECTANDO-SE AO SERVIDOR </p></div>
+    <div id="chatSection">
+        <h2>Chat:</h2>
+        <div class="chatMessage">Patro: tá na hora de buscar café.</div>
+    </div>
+    <div id="playerSection"> 
     <div id="aviso" style="display: none;"></div>
     <div id="mainPage" style="display: none;">
         <input type="text" id="playerName" placeholder="Seu nome">
+        <input type="text" id="playerMessage" placeholder="Sua mensagem">
         <button onclick="sendMessage()">Enviar</button>
     </div>
 
