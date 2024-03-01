@@ -1,0 +1,120 @@
+// Criar Conexão WebSocket
+// var socket = new WebSocket('ws://localhost:8765');
+const websocketUrl = 'wss://patroserver.onrender.com/:4999';
+const socket = new WebSocket(websocketUrl);
+
+var failed = false;
+var pointsCounter = 0;
+
+// Alterar texto do loadingMsg
+setInterval(function() {
+    if (pointsCounter == 3) {
+        pointsCounter = 0;
+        // Tentar reconectar
+        // socket = new WebSocket(websocketUrl);
+    } else {
+        pointsCounter++;
+    }
+
+    if (!failed) {
+        var loadingMsg = document.getElementById("loadingMsg");
+        loadingMsg.textContent = "CONECTANDO-SE AO SERVIDOR" + ".".repeat(pointsCounter);
+    }
+}, 500);
+
+// Conexão Aberta
+socket.addEventListener('open', function (event) {
+    console.log('Conexão Aberta');
+    var mainPage = document.getElementById("mainPage");
+    mainPage.style.display = "block";
+    var loadingMsg = document.getElementById("loadingMsg");
+    loadingMsg.style.display = "none";
+});
+
+// Conexão Fechada
+socket.addEventListener('close', function (event) {
+    console.log('Conexão Fechada');
+
+    var loadingMsg = document.getElementById("loadingMsg");
+    loadingMsg.style.display = "block";
+    loadingMsg.innerHTML = "ERRO AO CONECTAR AO SERVIDOR<br><br>POR FAVOR ATUALIZE A PÁGINA";
+
+    var mainPage = document.getElementById("mainPage");
+    mainPage.style.display = "none";
+
+    var failedMsg = document.getElementById("returnMsg");
+    failedMsg.style.display = "block";  
+
+    failed = true;
+});
+
+// Receber Mensagem
+socket.addEventListener('message', function (event) {
+    console.log('Mensagem Recebida: ' + event.data);
+    // Criar objeto com informações recebidas:
+    var _playerInfo = JSON.parse(event.data);
+
+    var _type = _playerInfo.command;
+
+    if (_type == "PLAYER_LOGIN") {
+        // Nome no pacote:
+        var _name = _playerInfo.values.name;
+
+        // Nome no formulário:
+        var _playerName = document.getElementById("playerName").value;
+
+        if (_name === _playerName) {
+            console.log("Você está conectado.")
+            // Informar que o jogador está conectado
+            var playerConnected = document.getElementById("playerConnected");
+            playerConnected.textContent = "JOGADOR CONECTADO";
+            playerConnected.style.display = "block";
+        }
+    }
+});
+
+// Enviar Mensagem
+function sendMessage() {
+
+    var campo = document.getElementById("playerName");
+    var aviso = document.getElementById("aviso");
+
+    campo.addEventListener("input", function() {
+        campo.classList.remove("error");
+        aviso.style.display = "none";
+    });
+    
+    if (campo.value === "") {
+        campo.classList.add("error");
+        aviso.textContent = "Informe seu nome de jogador.";
+        aviso.style.display = "block"; // Exibe o aviso
+        return false; // Impede o envio do formulário
+    }
+
+    var _playerInfo = {};
+
+    // Obter texto inserido pelo usuário:
+    _playerInfo.command = "PLAYER_LOGIN";
+    _playerInfo.values = {};
+    _playerInfo.values.name = String(document.getElementById("playerName").value).toUpperCase();
+
+    var jsonData = JSON.stringify(_playerInfo); 
+
+    console.log(`Dados enviados: ${jsonData}`);
+    
+    var playerName = _playerInfo.values.name;
+
+    if (playerName == "ADMIN_LABIRAS") {
+        // Acessar Painel de Administrador
+        window.location.href = "admin_panel.html?name=" + encodeURIComponent(playerName);
+    } else {
+        // Enviar mensagem:
+        socket.send(jsonData);
+        
+        // Limpar campo:
+        document.getElementById("playerName").value = "";
+
+        // DESATIVADO: Mudar de página para player_panel.html:
+        // window.location.href = "player_panel.html?name=" + encodeURIComponent(playerName);
+    }
+}
