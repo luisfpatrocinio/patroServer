@@ -10,16 +10,19 @@ async def server(websocket, path):
     print("Cliente conectado: " + str(websocket.remote_address))
     connectedClients.add(websocket)
     
+    try:
     # Loop para receber mensagens do cliente:
-    async for message in websocket:
-        # Processar a mensagem recebida do cliente:
-        print(f"Recebi a mensagem: {message}")
-        
-        # Mandando a mensagem para todos os clientes
-        for conected in connectedClients:
-            print("Mandando pacote para: " + str(conected.remote_address))
-            await conected.send(message);
-                        
+        async for message in websocket:
+            # Processar a mensagem recebida do cliente:
+            print(f"Recebi a mensagem: {message}")
+            
+            # Mandando a mensagem para todos os clientes
+            for conected in connectedClients:
+                print("Mandando pacote para: " + str(conected.remote_address))
+                await conected.send(message);
+    finally:
+        connectedClients.remove(websocket);
+        print("CLiente " + str(conected.remote_address) + " saiu...")
 
 # Iniciar o servidor:
 start_server = websockets.serve(server, "", 8765)
