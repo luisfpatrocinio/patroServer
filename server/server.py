@@ -2,6 +2,7 @@ import utils # biblioteca de utilidades própria
 import asyncio # assincronia em python
 import websockets 
 import messageHandler # arquivo criado para métodos para lidar com mensagens
+import packetHandler
 
 from datetime import datetime
 
@@ -14,8 +15,9 @@ async def server(websocket, path):
     
     # Adciona um novo cliente a lista de clientes conectados
     print("Cliente conectado: " + str(websocket.remote_address))
+    await sendAllMessages(websocket);
     connectedClients.add(websocket)
-    
+
     try:
     # Loop para receber mensagens do cliente:
         async for messageStr in websocket:
@@ -32,7 +34,8 @@ async def server(websocket, path):
                 values = message["values"]
                 
                 # Convertendo o que ta vindo no formato de uma mensagem
-                messageIntance = messageHandler.newMessage(owner=values["name"], 
+                messageIntance = messageHandler.newMessage(userId= values["userId"],
+                                                           owner=values["name"], 
                                                            timestamp=datetime.now().timestamp(), 
                                                            content=values["message"])
                 
@@ -56,6 +59,19 @@ def main():
     # Executa o servidor indefinidamente
     asyncio.get_event_loop().run_until_complete(start_server)
     asyncio.get_event_loop().run_forever()
+
+
+# Pega todas as mensagens do arquivo de mensagens
+def getAllMessages():
+    messages = utils.loadJSON("messages.json")
+    return messages;
+
+# Encarregado de mandar todas os objetos mensagem armazenadas para um usuário
+async def sendAllMessages(userConnection):
+    messages = getAllMessages();
+    newPacket = packetHandler.newPacket("MESSAGE_HISTORY", messages);
+    newPacketStr = utils.dumpsJSON(newPacket)
+    await userConnection.send(newPacketStr);
 
 if __name__ == "__main__":
     main();
