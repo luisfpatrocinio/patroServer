@@ -6,7 +6,7 @@ dirname = os.path.dirname(__file__);
 
 
 def dumpsJSON(dict):
-    return json.dump(dict);
+    return json.dumps(dict);
 
 
 def parseJSON(strObj):
