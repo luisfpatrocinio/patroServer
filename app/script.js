@@ -4,6 +4,8 @@
 const websocketUrl = 'wss://patroserver.onrender.com/:8765';
 const socket = new WebSocket(websocketUrl);
 
+const userID = uuidv4();
+
 var failed = false;
 var pointsCounter = 0;
 
@@ -77,10 +79,19 @@ socket.addEventListener('message', function (event) {
         var _name = _playerInfo.values.name;
         var _message = _playerInfo.values.message;
         createMessageBlock(_name, _message);
-
     }
+
+
+    if (_type == "MESSAGE_HISTORY"){
+        var _messages = _playerInfo.values;
+        for(_message of _messages){
+            createMessageBlock(_message.owner, _message.content)
+        }
+    }
+    
 });
 
+// Criar um bloco de mensagem no html
 function createMessageBlock(name, message) {
     console.log("Criando bloco de mensagem")
     const chatSection = document.getElementById("chatSection");
@@ -113,6 +124,7 @@ function sendMessage() {
     // Obter texto inserido pelo usuário:
     _playerInfo.command = "PLAYER_MESSAGE";
     _playerInfo.values = {};
+    _playerInfo.values.userId = String(userID);
     _playerInfo.values.name = String(document.getElementById("playerName").value).toUpperCase();
     _playerInfo.values.message = String(document.getElementById("playerMessage").value).toUpperCase();
 
@@ -135,4 +147,15 @@ function sendMessage() {
         // DESATIVADO: Mudar de página para player_panel.html:
         // window.location.href = "player_panel.html?name=" + encodeURIComponent(playerName);
     }
+    
 }
+
+function deleteMessages() {
+    const messageBlocksOnHtml = document.getElementsByClassName("chatMessage")
+}
+
+function uuidv4() {
+    return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
+        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
+    }
